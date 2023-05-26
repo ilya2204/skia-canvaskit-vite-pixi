@@ -12,6 +12,7 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
-    "canvaskit-wasm": "^0.34.1"
+    "canvaskit-wasm": "^0.37.2",
+    "pixi.js": "^7.2.4"
   }
 }
