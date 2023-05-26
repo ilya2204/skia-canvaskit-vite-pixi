@@ -1,48 +1,40 @@
-import './style.css'
+import "./style.css";
+import { initCanvases } from "./init-canvases";
+import { PIXI_STAGE, renderPixi } from "./pixi/app";
+import { initSkia, renderTextBySkia } from "./initSkia";
+import { Graphics, Texture } from "pixi.js";
+import { PixiSkiaText } from "./pixi/pixi-skia-text";
 
-const app = document.querySelector<HTMLDivElement>('#app')!
+initCanvases();
 
-// @ts-ignore
-import CanvasKitInit from "canvaskit-wasm/bin/canvaskit.js";
-import CanvasKitWasm from "canvaskit-wasm/bin/canvaskit.wasm?url";
-import { Canvas, CanvasKit } from "canvaskit-wasm";
+const graphics = new Graphics();
+graphics.beginFill(0x0000ff);
+graphics.drawRect(50, 50, 100, 100);
+graphics.endFill();
+graphics.zIndex = 1;
 
-CanvasKitInit({ locateFile: () => CanvasKitWasm }).then(
-  (CanvasKit: CanvasKit) => {
-    const surface = CanvasKit.MakeCanvasSurface('foo');
-    const paint = new CanvasKit.Paint();
-    paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
-    paint.setStyle(CanvasKit.PaintStyle.Stroke);
-    paint.setAntiAlias(true);
-    const w = 100; // size of rect
-    const h = 60;
-    let x = 10; // initial position of top left corner.
-    let y = 60;
-    let dirX = 1; // box is always moving at a constant speed in one of the four diagonal directions
-    let dirY = 1;
+const graphics2 = new Graphics();
+graphics2.beginFill(0x00ff00);
+graphics2.drawCircle(50, 50, 100);
+graphics2.endFill();
+graphics2.position.set(150, 100);
+graphics2.zIndex = 0;
 
-    function drawFrame(canvas: Canvas) {
-      // boundary check
-      if (x < 0 || x+w > 300) {
-        dirX *= -1; // reverse x direction when hitting side walls
-      }
-      if (y < 0 || y+h > 300) {
-        dirY *= -1; // reverse y direction when hitting top and bottom walls
-      }
-      // move
-      x += dirX;
-      y += dirY;
+const skiaPixiText = new PixiSkiaText(Texture.WHITE);
+skiaPixiText.width = 75;
+skiaPixiText.height = 75;
+skiaPixiText.position.set(110, 110);
+skiaPixiText.tint = 0xff0000;
+skiaPixiText.zIndex = 0.5;
 
-      canvas.clear(CanvasKit.WHITE);
-      const rr = CanvasKit.RRectXY(CanvasKit.LTRBRect(x, y, x+w, y+h), 25, 15);
-      canvas.drawRRect(rr, paint);
-      surface?.requestAnimationFrame(drawFrame);
-    }
-    surface?.requestAnimationFrame(drawFrame);
-  });
+PIXI_STAGE.addChild(graphics);
+PIXI_STAGE.addChild(graphics2);
+PIXI_STAGE.addChild(skiaPixiText);
 
-app.innerHTML = `
-  <h1>Hello Skia CanvasKit on Vite!</h1>
-  <canvas id=foo width=300 height=300></canvas>
-`
+renderPixi();
 
+await initSkia();
+
+const str =
+  "The quick brown fox 🦊 ate a zesty hamburgerfons 🍔.\nThe 👩‍👩‍👧‍👧 laughed.";
+renderTextBySkia(str, true);

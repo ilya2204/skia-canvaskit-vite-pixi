@@ -1,0 +1,40 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "npm install"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "dev": {
+      "name": "dev",
+      "command": "npm run dev",
+      "runAtStart": true
+    },
+    "build": {
+      "name": "build",
+      "command": "npm run build",
+      "runAtStart": false
+    },
+    "preview": {
+      "name": "preview",
+      "command": "npm run preview",
+      "runAtStart": false
+    },
+    "npm install": {
+      "name": "npm install",
+      "command": "npm install"
+    },
+    "npm install @pixi.js": {
+      "name": "npm install @pixi.js",
+      "command": "npm install @pixi.js"
+    },
+    "npm install pixi.js@7.2.4": {
+      "name": "npm install pixi.js@7.2.4",
+      "command": "npm install pixi.js@7.2.4"
+    }
+  }
+}
